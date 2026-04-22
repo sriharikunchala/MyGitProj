@@ -1,12 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Hello World!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Traffic Policy Explanation by srihari</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .section {
+            margin-top: 25px;
+        }
+        .section h2 {
+            color: #34495e;
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+        .highlight {
+            background: #ecf7ff;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .warning {
+            background: #fff4f4;
+            border-left: 5px solid #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Hello world!</h1>
-<p>This is the first file in my new Git Repo.</p>
+<div class="container">
+    <h1>Understanding externalTrafficPolicy: Local</h1>
+
+    <div class="section">
+        <h2>Overview</h2>
+        <p>
+            When using <strong>externalTrafficPolicy: Local</strong>, the cluster does not forward incoming traffic
+            to other nodes. Traffic is only routed to pods running on the same node that receives the request.
+            This ensures that the client’s IP address is preserved all the way to the pod.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>High Availability Recommendation</h2>
+        <p>
+            To maintain high availability, it is recommended to scale the application so that each node has
+            at least one running pod. This allows every node to handle incoming traffic locally.
+        </p>
+
+        <div class="highlight">
+            <strong>Best Practice:</strong>
+            <ul>
+                <li>Match the number of replicas with the number of nodes</li>
+                <li>Ensure even pod distribution across nodes</li>
+                <li>Use proper scheduling strategies if needed</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Current Scenario</h2>
+        <p>
+            The cluster consists of <strong>10 nodes</strong>, but only <strong>2 pods</strong> are running.
+            This means that <strong>8 nodes do not have local endpoints</strong>.
+        </p>
+
+        <div class="warning">
+            <strong>Impact:</strong>
+            <ul>
+                <li>Nodes without local pods cannot serve traffic</li>
+                <li>Incoming requests to those nodes will be dropped</li>
+                <li>This leads to reduced availability and potential service disruption</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        Kubernetes Networking Guide
+    </div>
+</div>
 
 </body>
 </html>
